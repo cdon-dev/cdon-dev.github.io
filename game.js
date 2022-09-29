@@ -364,72 +364,13 @@ function draw() {
   UI.draw();
 }
 
-getScoreboard();
-
 var userNameInput = document.getElementById("username-game");
 var btnStart = document.getElementById("game-start");
 var startArea = document.getElementById("start-area");
 var gameArea = document.getElementById("game-area");
 var scoreBoard = document.getElementById("scoreboard");
-var userNameDisplay = document.getElementById("username-display");
-
-var a = ["Small", "Blue", "Ugly", "Nice", "Dude", "Evil"];
-var b = ["Bear", "Dog", "Banana", "Robin", "Johan", "Mats"];
-
-var rA = Math.floor(Math.random() * a.length);
-var rB = Math.floor(Math.random() * b.length);
-
-var userName = a[rA] + "-" + b[rB] + "-" + Math.floor(Math.random() * 70000);
-
-if (localStorage["userName"]) {
-  userName = localStorage["userName"];
-  startArea.style.display = "none";
-  gameArea.style.display = "block";
-  userNameDisplay.innerHTML += " " + userName;
-} else {
-  userNameInput.placeholder = userName;
-}
 
 btnStart.addEventListener("click", () => {
-  if (userNameInput.value) {
-    userName = userNameInput.value;
-  }
-  
-  localStorage["userName"] = userName;
   startArea.style.display = "none";
   gameArea.style.display = "block";
-  userNameDisplay.innerHTML += " " + userName;
 });
-
-setInterval(() => {
-  getScoreboard();
-}, 5000);
-
-function getScoreboard() {
-  fetch("/catalog/api/GetScoreboard", {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      updateScoreBoard(data);
-    });
-}
-
-function updateScoreBoard(data) {
-  let scoreBoardBody = document.getElementById("scoreBoardBody");
-  scoreBoardBody.innerHTML = "";
-  data.forEach((element) => {
-    let tr = document.createElement("tr");
-    let tdName = document.createElement("td");
-    let tdScore = document.createElement("td");
-    tdName.innerHTML = element.userName;
-    tdScore.innerHTML = element.score;
-    tr.appendChild(tdName);
-    tr.appendChild(tdScore);
-    scoreBoardBody.appendChild(tr);
-  });
-}
